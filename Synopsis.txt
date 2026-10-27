@@ -1,0 +1,127 @@
+
+Project Synopsis
+Anonymous Complaint Box Using Blockchain
+Submitted by: [Student Name(s)] · Roll No.: [] · Course/Branch: [] Guide: [Guide Name] · Institution: [College Name] · Session: [____]
+
+1. Introduction
+In most colleges and organizations, complaints are collected through paper boxes or email forms. Students often hesitate to report issues such as harassment, ragging, hostel problems or unfair evaluation because they fear being identified or because they doubt the complaint will be taken seriously. Even when complaints are submitted, they can be altered, hidden or deleted without anyone knowing.
+Blockchain is a distributed, tamper-proof ledger in which recorded data cannot be changed or deleted. This project uses blockchain to build an Anonymous Complaint Box where anyone can submit a complaint without giving a name, and where every complaint and every action taken on it is permanently and publicly verifiable.
+2. Problem Statement
+Traditional complaint systems suffer from three main problems:
+Fear of identity exposure: users must reveal who they are, which discourages honest reporting.
+Lack of trust: complaints can be edited, ignored or deleted by the people managing the system.
+No transparency: the complainant cannot verify that the complaint was received and acted upon.
+There is a need for a system that protects the complainant's identity, keeps complaints tamper-proof, and makes the authority's response transparent.
+3. Objectives
+To build a complaint system that does not require names, emails or passwords.
+To store complaints on a blockchain so they cannot be modified or deleted.
+To give every complaint a unique ID so the submitter can track it.
+To allow only an authorised admin to update status and respond, with every update recorded publicly.
+To learn and demonstrate core blockchain concepts: smart contracts, wallets, transactions, events and immutability.
+4. Scope of the Project
+Included:
+Smart contract for submitting complaints and updating their status
+Web interface for students (submit and track) and admin (review and respond)
+Wallet-based access using MetaMask on the Sepolia test network
+Public statistics and complaint list
+Hosting of the website on AWS
+Not included (future scope): encryption of complaint text, identity proof of student status, file attachments, notifications and real-money deployment.
+5. Proposed System
+The proposed system is a decentralized application (dApp) with three core parts:
+Frontend (React website): the interface for students and admin.
+Wallet (MetaMask): used to sign transactions; no personal details are needed.
+Smart contract (Solidity, on the Sepolia blockchain): stores complaints and enforces the rules.
+Working:
+The student connects a fresh wallet and writes a complaint with a category.
+The smart contract stores the complaint and returns a unique complaint ID.
+The admin wallet reviews complaints and updates the status (Submitted, Under Review, Resolved, Rejected) with a written response.
+The student checks the status anytime using the complaint ID.
+All actions are recorded as blockchain events, so history cannot be altered.
+6. Modules
+Module
+Description
+Wallet Connection
+Connects MetaMask, checks network, shows address
+Complaint Submission
+Form for category and description, stores complaint on-chain
+Complaint Tracking
+Search by ID, shows status and admin response
+Public Dashboard
+Lists complaints and shows statistics
+Admin Panel
+Admin-only status update and response
+Smart Contract
+Core logic, access control and event logging
+7. Methodology
+The project follows an incremental development approach:
+Requirement analysis and SRS preparation
+Smart contract design and development in Solidity
+Testing the contract locally with Hardhat
+Deployment to the Sepolia test network
+Frontend development in React with ethers.js
+Integration of wallet and contract
+Hosting on AWS Amplify and end-to-end testing with two wallets (student and admin)
+8. Technology Stack
+Layer
+Technology
+Smart contract
+Solidity
+Development and testing
+Hardhat, Chai
+Blockchain network
+Ethereum Sepolia testnet
+Frontend
+React (Vite), ethers.js
+Wallet
+MetaMask
+RPC provider
+Alchemy or Infura
+Hosting
+AWS Amplify or S3
+Tools
+VS Code, Git, GitHub
+9. Hardware and Software Requirements
+Hardware: a computer with at least 4 GB RAM (8 GB recommended), stable internet connection. Software: Windows, Linux or macOS; Node.js; VS Code; Chrome or Brave browser with MetaMask extension; Git.
+10. Advantages
+Strong tamper-proof record of every complaint
+No name, email or password collected
+Transparent and verifiable handling by the authority
+No central server or database to attack or manipulate
+Low cost to build and demonstrate on a test network
+11. Limitations
+Wallet addresses are pseudonymous, so a user must use a fresh wallet for real anonymity.
+Data on a public blockchain is visible to everyone, so users must not write personal details.
+Each submission needs a small gas fee (free test ETH in this project).
+Version 1.0 supports a single admin.
+12. Expected Outcome
+A working blockchain-based web application deployed on a test network and hosted on AWS, in which a student can anonymously submit a complaint, receive an ID, and track the authority's response, while the admin can respond and every action remains permanently recorded and verifiable. The project will also give the team practical understanding of smart contracts, wallets, transactions and decentralized application design.
+13. Future Scope
+Encrypting complaints so only the admin can read them
+Zero-knowledge proof that the submitter is a verified student without revealing identity
+Multiple admins and department-wise routing
+Gasless submission through a relayer
+Evidence upload using IPFS
+Notifications for status changes
+Deployment on a low-cost Layer 2 network
+14. Project Timeline
+Week / Days
+Activity
+Day 1
+Requirement analysis, SRS and design
+Days 2–3
+Smart contract development and testing
+Day 3
+Deployment to Sepolia
+Days 4–6
+Frontend development and integration
+Day 7
+AWS hosting, testing and demo preparation
+15. Conclusion
+The Anonymous Complaint Box demonstrates how blockchain can solve real trust and privacy problems in complaint handling. By combining wallet-based access with an immutable smart contract, the system encourages honest reporting, prevents tampering, and makes the response process transparent. It is a practical, beginner-friendly project that applies core blockchain concepts to a meaningful real-world need.
+16. References
+Ethereum documentation: ethereum.org
+Solidity documentation: docs.soliditylang.org
+Hardhat documentation: hardhat.org
+ethers.js documentation: docs.ethers.org
+MetaMask documentation: docs.metamask.io
+AWS Amplify documentation: docs.amplify.aws

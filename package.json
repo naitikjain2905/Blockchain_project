@@ -1,0 +1,29 @@
+{
+  "name": "anonymous-complaint-box-blockchain",
+  "version": "1.0.0",
+  "description": "Anonymous Complaint Box using Blockchain (Ethereum / Sepolia) - IEEE 830 compliant dApp",
+  "main": "hardhat.config.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "node": "hardhat node",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia"
+  },
+  "keywords": [
+    "blockchain",
+    "ethereum",
+    "solidity",
+    "hardhat",
+    "dapp",
+    "anonymous-complaint-box"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "dotenv": "^16.4.7",
+    "hardhat": "^2.22.18"
+  }
+}
+

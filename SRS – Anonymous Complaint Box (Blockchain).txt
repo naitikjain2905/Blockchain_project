@@ -1,0 +1,343 @@
+
+Software Requirements Specification
+Anonymous Complaint Box Using Blockchain
+Version 1.0 · Prepared following the IEEE 830 structure
+
+1. Introduction
+1.1 Purpose
+This document specifies the requirements for the Anonymous Complaint Box, a blockchain-based web application where students can submit complaints without revealing their identity, and an authority can review and respond to them. Complaints, once submitted, cannot be edited or deleted by anyone, which builds trust in the system.
+1.2 Scope
+The system consists of:
+A smart contract (Solidity) deployed on the Ethereum Sepolia test network that stores complaints, assigns IDs, and controls status updates.
+A web frontend (React) with a student interface and an admin interface.
+Wallet-based access through MetaMask, so no name, email or password is collected.
+Hosting of the frontend on AWS Amplify or S3.
+The system does not include a traditional backend server, a user database, email notifications, or identity verification in version 1.0.
+1.3 Definitions, Acronyms and Abbreviations
+Term
+Meaning
+dApp
+Decentralized application: a web frontend backed by a smart contract
+Smart contract
+Program stored and executed on a blockchain
+Wallet
+Software (MetaMask) that holds an address and signs transactions
+Pseudonymous
+Identified only by a wallet address, not by real name
+Immutable
+Cannot be changed or deleted after being recorded
+Sepolia
+Ethereum public test network
+Gas
+Fee paid to the network for executing a transaction
+Admin
+The wallet address authorised to review and respond to complaints
+SRS
+Software Requirements Specification
+1.4 References
+IEEE Std 830-1998, Recommended Practice for Software Requirements Specifications
+Solidity documentation
+Hardhat documentation
+ethers.js documentation
+OpenZeppelin Contracts documentation
+1.5 Document Overview
+Section 2 describes the product in general. Section 3 lists functional requirements. Section 4 covers external interfaces. Section 5 gives the smart contract specification. Section 6 lists non-functional requirements. Section 7 gives use cases, and Section 8 covers risks and future work.
+
+2. Overall Description
+2.1 Product Perspective
+The product is a standalone, serverless dApp with three core parts: the web frontend, the user's wallet, and the smart contract. There is no central database; the blockchain is the single source of truth.
+Student / Admin Browser (React app on AWS)        |  ethers.js + MetaMask wallet        |ComplaintBox smart contract (Sepolia blockchain)
+2.2 Product Functions (Summary)
+Connect a wallet and detect the correct network
+Submit a complaint with a category and description
+Receive a unique complaint ID as proof of submission
+Track complaint status using the ID
+Browse a public list of complaints (optional public view)
+Admin: view all complaints, update status and add a response
+View statistics: total, pending, resolved
+Record every action as a blockchain event for transparency
+2.3 User Classes and Characteristics
+User class
+Description
+Technical skill
+Student (Complainant)
+Submits and tracks complaints using a wallet
+Basic wallet knowledge
+Admin (Authority)
+Reviews complaints and posts responses
+Basic wallet knowledge
+Visitor
+Views public statistics and complaints without a wallet
+None
+2.4 Operating Environment
+Desktop and mobile browsers with the MetaMask extension or wallet browser
+Ethereum Sepolia test network
+Frontend hosted on AWS Amplify or S3 with CloudFront
+Development: Node.js, Hardhat, Solidity ^0.8.x, React with Vite
+2.5 Design and Implementation Constraints
+Data written to the blockchain is permanent and public; the system must warn users not to include personal details.
+Only one admin address is set at deployment in version 1.0.
+Each submission requires a transaction and a small gas fee (free test ETH on Sepolia).
+Complaint text length is limited to control gas cost.
+The wallet address is visible on-chain, so anonymity depends on users using a fresh wallet.
+2.6 Assumptions and Dependencies
+Users have a Sepolia wallet funded with test ETH from a faucet.
+Sepolia and the RPC provider (Alchemy or Infura) remain available.
+The admin keeps the admin wallet's private key secure.
+AWS hosting remains available.
+
+3. Functional Requirements
+3.1 Wallet Connection
+ID
+Requirement
+FR-1.1
+The system shall provide a "Connect Wallet" button to connect MetaMask.
+FR-1.2
+The system shall display the connected address in shortened form.
+FR-1.3
+The system shall detect the wrong network and prompt the user to switch to Sepolia.
+FR-1.4
+The system shall refresh the UI when the user changes account or network.
+FR-1.5
+The system shall show a clear message when no wallet is installed.
+FR-1.6
+The system shall display a notice recommending a fresh wallet for anonymity.
+3.2 Submit Complaint
+ID
+Requirement
+FR-2.1
+The system shall provide a form with a category (for example Academic, Hostel, Harassment, Infrastructure, Other) and a description.
+FR-2.2
+The system shall validate that the description is not empty and does not exceed the maximum length.
+FR-2.3
+The system shall warn the user not to enter names or personal identifiers.
+FR-2.4
+On submission, the contract shall store the complaint with a unique ID, timestamp, category, description and the initial status Submitted.
+FR-2.5
+The system shall show the complaint ID and transaction hash after confirmation and recommend saving the ID.
+FR-2.6
+The system shall not collect any name, email or phone number.
+3.3 Track Complaint
+ID
+Requirement
+FR-3.1
+The system shall allow a user to enter a complaint ID and view its category, description, timestamp, status and admin response.
+FR-3.2
+The system shall show the full status history of a complaint through emitted events.
+FR-3.3
+The system shall show a clear message for an ID that does not exist.
+3.4 Public Complaint List
+ID
+Requirement
+FR-4.1
+The system shall list all complaints with ID, category, status and date.
+FR-4.2
+The system shall allow filtering by status and category.
+FR-4.3
+The list shall not display the submitter's address in the interface.
+3.5 Admin Panel
+ID
+Requirement
+FR-5.1
+The system shall show the Admin Panel only when the connected wallet is the admin address.
+FR-5.2
+The admin shall be able to view all complaints with their details.
+FR-5.3
+The admin shall be able to change a complaint's status to Under Review, Resolved or Rejected.
+FR-5.4
+The admin shall be able to attach a text response when changing status.
+FR-5.5
+The contract shall reject status updates from any address other than the admin.
+FR-5.6
+The admin shall not be able to edit or delete the original complaint text.
+3.6 Statistics
+ID
+Requirement
+FR-6.1
+The home page shall show total complaints and counts by status.
+FR-6.2
+The system shall refresh figures automatically when new contract events arrive.
+3.7 Transaction Feedback
+ID
+Requirement
+FR-7.1
+The system shall show pending, confirmed and failed states for every transaction.
+FR-7.2
+The system shall provide an Etherscan link for each transaction.
+
+4. External Interface Requirements
+4.1 User Interface
+A responsive single-page application with these screens:
+Home: project introduction, Connect Wallet, statistics
+Submit Complaint: category, description, privacy warning
+Track Complaint: search by complaint ID
+All Complaints: filterable public list
+Admin Panel: visible only to the admin wallet
+General UI requirements: clear loading and error states, readable on screens from 360 px wide, and a persistent notice about the public nature of blockchain data.
+4.2 Hardware Interfaces
+No special hardware; any device with a modern web browser.
+4.3 Software Interfaces
+MetaMask (EIP-1193 provider) for account access and signing
+ethers.js to read from and write to the contract
+JSON-RPC provider (Alchemy or Infura) for Sepolia
+Etherscan (Sepolia) for transaction viewing
+AWS Amplify or S3/CloudFront for hosting
+4.4 Communication Interfaces
+HTTPS between browser and hosting; JSON-RPC over HTTPS or WebSocket between wallet/browser and the Ethereum node.
+
+5. Smart Contract Specification
+5.1 Data Model
+enum Status { Submitted, UnderReview, Resolved, Rejected }struct Complaint {  uint256 id;  string  category;  string  description;  uint256 timestamp;  Status  status;  string  adminResponse;}address public admin;uint256 public complaintCount;mapping(uint256 => Complaint) complaints;
+The submitter's address is not stored in contract storage. It is still visible in the transaction record, which is why a fresh wallet is advised.
+5.2 State Machine
+Submitted --> UnderReview --> Resolved    |              |    +------------> Rejected
+5.3 Functions
+Function
+Caller
+Preconditions
+Effects
+submitComplaint(category, description)
+Anyone
+Description non-empty and within length limit
+Creates complaint with next ID, status Submitted, emits ComplaintSubmitted
+updateStatus(id, status, response)
+Admin only
+Complaint exists; valid status
+Updates status and response, emits StatusUpdated
+getComplaint(id)
+Anyone
+Complaint exists
+Returns complaint data
+getAllComplaints()
+Anyone
+None
+Returns all complaints
+getStats()
+Anyone
+None
+Returns totals by status
+5.4 Events
+ComplaintSubmitted(id, category, timestamp) and StatusUpdated(id, status, response, timestamp).
+5.5 Contract Security Requirements
+SC-1: An onlyAdmin modifier shall restrict status updates.
+SC-2: There shall be no function that edits or deletes a complaint's original text.
+SC-3: Input length limits shall prevent oversized submissions.
+SC-4: The contract shall not hold or transfer funds.
+SC-5: (Optional) A cooldown per address shall limit spam submissions.
+
+6. Non-Functional Requirements
+6.1 Performance
+The frontend shall load within 3 seconds on a normal broadband connection.
+Reading complaints shall complete within 2 seconds under normal RPC conditions.
+Transaction confirmation may take 12–30 seconds on Sepolia, and the UI shall show progress.
+6.2 Security
+Private keys shall never be handled by the application.
+Deployment keys and API keys shall be kept in .env files excluded from version control.
+The contract shall be tested for unauthorised access attempts.
+6.3 Privacy and Anonymity
+The system shall not collect or store names, emails, phone numbers or IP-based identifiers.
+The interface shall explain the limits of pseudonymity and recommend using a fresh wallet.
+6.4 Integrity and Transparency
+Complaints shall be tamper-proof once recorded.
+Every status change shall be publicly verifiable through events and Etherscan.
+6.5 Reliability and Availability
+The contract is available as long as the Ethereum network is available.
+The frontend shall handle rejected or failed transactions gracefully.
+6.6 Usability
+A first-time user shall be able to submit a complaint in under 2 minutes.
+Error messages shall be human-readable.
+6.7 Portability and Maintainability
+The frontend shall work on current Chrome, Firefox, Brave and Edge and be mobile-responsive.
+Code shall be modular, commented, and documented in a README.
+
+7. Use Cases
+UC-1: Submit a Complaint
+Actor: Student
+Precondition: Wallet connected on Sepolia with a small amount of test ETH
+Main flow: Student opens Submit page → selects category → writes description → confirms in MetaMask → contract stores complaint → system shows the complaint ID
+Alternate flow: Empty or oversized description, or rejected transaction → error shown and nothing stored
+UC-2: Track a Complaint
+Actor: Student or visitor
+Main flow: User enters complaint ID → system reads the contract → shows status and admin response
+UC-3: Review and Respond
+Actor: Admin
+Precondition: Connected wallet is the admin address
+Main flow: Admin opens Admin Panel → selects a complaint → chooses new status and writes a response → confirms in MetaMask → status and response are recorded
+Alternate flow: A non-admin attempts the action → contract rejects it
+UC-4: View Statistics and List
+Actor: Anyone
+Main flow: User opens Home or All Complaints → system reads contract → shows counts and filtered list
+
+8. Other Requirements
+8.1 Testing Requirements
+Hardhat tests shall cover: successful submission, ID increments, empty and oversized input rejection, admin-only status updates, rejection of non-admin updates, correct event emission, and the fact that original text cannot be changed. Manual end-to-end testing shall be done on Sepolia with two wallets (student and admin).
+8.2 Deployment Requirements
+The contract shall be deployed to Sepolia with a Hardhat script, setting the deployer as admin.
+The frontend shall be deployed to AWS Amplify (connected to GitHub) or S3 with CloudFront.
+8.3 Risks and Limitations
+Risk
+Impact
+Mitigation
+Wallet address can be linked to a person
+Loss of anonymity
+Fresh-wallet guidance, no personal data collected
+Users include names in complaint text
+Permanent public exposure
+Warning in the UI, length limit, future encryption
+Spam complaints
+Cluttered list
+Optional cooldown, future gasless-but-limited submissions
+Single admin
+Single point of control
+Future multi-admin or committee approval
+Faucet or RPC downtime
+Demo problems
+Backup test ETH and a second RPC provider
+8.4 Future Enhancements
+Encrypt complaint text so only the admin can read it
+Zero-knowledge proof that the submitter is a verified student without revealing identity
+Multiple admins or department-wise routing
+Gasless submission through a relayer
+File or image evidence stored on IPFS
+Email or SMS notification for status changes (using a hashed contact method)
+Deployment to a low-cost Layer 2 network
+
+9. Project Plan Summary
+Phase
+Work
+Duration
+1
+Requirements and design
+Day 1
+2
+Smart contract and tests
+Days 2–3
+3
+Sepolia deployment
+Day 3
+4
+Frontend development
+Days 4–6
+5
+AWS hosting and demo preparation
+Day 7
+
+10. Appendix: Technology Stack
+Layer
+Technology
+Smart contract
+Solidity
+Development and testing
+Hardhat, Chai
+Blockchain network
+Ethereum Sepolia testnet
+Frontend
+React (Vite), ethers.js
+Wallet
+MetaMask
+RPC provider
+Alchemy or Infura
+Hosting
+AWS Amplify or S3 + CloudFront
+Version control
+Git and GitHub
